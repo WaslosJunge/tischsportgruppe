@@ -1,0 +1,130 @@
+TISCHSPORTGRUPPE – Teams und Paarungen fuer den Kickerabend
+===========================================================
+
+Was das ist
+-----------
+Eine einzelne Webseite. Ihr tragt die Teilnehmer ein, wuerfelt in echt,
+tippt die Zahlen ein – die Seite bildet daraus die Doppel und alle
+Paarungen (jeder gegen jeden). Der hoechste Wurf spielt mit dem
+zweithoechsten, dann immer weiter nach unten. Bei ungerader Anzahl
+pausiert der niedrigste Wurf.
+
+Alternativ kann die Seite die Teams auch selbst auslosen.
+
+
+Diese Dateien gehoeren dazu
+---------------------------
+index.html          Die App. Muss "index.html" heissen, damit sie beim
+                    Aufruf des Ordners direkt startet.
+api.php             Speichert und liefert den gemeinsamen Stand.
+favicon.svg         Das kleine Symbol im Browser-Tab.
+daten/              Ordner fuer den gespeicherten Stand.
+daten/stand.json    Die eigentlichen Daten (anfangs leer).
+daten/.htaccess     Sperrt den direkten Zugriff auf die Daten von aussen.
+LIESMICH.txt        Diese Datei. Muss nicht mit hochgeladen werden.
+
+Alle Namen sind klein geschrieben, ohne Umlaute und ohne Leerzeichen.
+Bitte genau so lassen – manche Server unterscheiden Gross- und
+Kleinschreibung, und dann findet die App ihre Dateien nicht mehr.
+
+
+Hochladen – Schritt fuer Schritt
+--------------------------------
+1. Verbinde dich per FTP mit deinem Webspace (z. B. mit FileZilla).
+   Zugangsdaten stehen im Kundenbereich deines Anbieters.
+
+2. Lege im Web-Verzeichnis einen Ordner an, z. B.
+
+       /kicker
+
+   Das Web-Verzeichnis heisst je nach Anbieter htdocs, httpdocs,
+   public_html oder www.
+
+3. Lade dort hinein:
+       index.html
+       api.php
+       favicon.svg
+       daten/  (mit stand.json und .htaccess darin)
+
+   Achte darauf, dass "daten" wirklich ein Unterordner bleibt und die
+   beiden Dateien darin liegen.
+
+4. Rechte setzen (in FileZilla: Rechtsklick -> Dateiberechtigungen):
+       Ordner daten           ->  775
+       Datei daten/stand.json ->  664
+
+   Ohne diesen Schritt kann PHP nichts speichern. Die App sagt dir das
+   dann auch als Fehlermeldung.
+
+5. Im Browser aufrufen:
+       https://deine-domain.de/kicker/
+
+   Oben rechts im gruenen Feld steht der Zustand:
+       "Fuer alle gespeichert"  -> alles richtig, PHP laeuft
+       "Nur in diesem Browser"  -> api.php wird nicht gefunden oder
+                                   PHP ist aus (siehe unten)
+
+6. Link an die Kumpels schicken. Fertig.
+
+
+Wenn "Nur in diesem Browser" steht
+----------------------------------
+Dann laeuft der Speicherdienst nicht. Die App funktioniert trotzdem,
+aber jeder sieht nur seinen eigenen Stand. Moegliche Ursachen:
+
+- api.php liegt nicht im selben Ordner wie index.html.
+- Der Anbieter hat PHP nicht aktiviert (bei reinem Webspace ohne PHP,
+  z. B. GitHub Pages oder manchen Gratis-Angeboten, gibt es das nicht).
+- Die Rechte aus Schritt 4 fehlen.
+
+Zum Pruefen ruf api.php direkt im Browser auf:
+
+    https://deine-domain.de/kicker/api.php
+
+Richtig ist eine Zeile wie:
+    {"rev":0,"state":{"v":3,"players":[],"pairMode":"dice","draw":null}}
+
+Siehst du stattdessen den PHP-Quelltext, laeuft kein PHP.
+Siehst du eine Fehlermeldung, steht dort meist direkt, was fehlt.
+
+
+Wie die Daten gespeichert werden
+--------------------------------
+Alles steckt in daten/stand.json – Teilnehmer, Wuerfe, Teams,
+Paarungen. Eine einzige Textdatei, keine Datenbank noetig.
+
+Jeder Speichervorgang zaehlt "rev" um eins hoch. Wer speichert, schickt
+mit, welchen Stand er gesehen hat. Passt der nicht mehr, weil in der
+Zwischenzeit jemand anderes gespeichert hat, lehnt der Server ab und
+schickt den neueren Stand zurueck – dann seht ihr eine Meldung und
+koennt es nochmal machen. So ueberschreibt niemand aus Versehen die
+Auslosung eines anderen.
+
+Die offenen Seiten schauen alle 6 Sekunden nach, ob es etwas Neues
+gibt, und aktualisieren sich dann von selbst.
+
+Sichern: einfach daten/stand.json herunterladen.
+Alles zuruecksetzen: den Inhalt von stand.json ersetzen durch
+
+    {"rev":0,"state":{"v":3,"players":[],"pairMode":"dice","draw":null}}
+
+
+Wer darf mitmachen
+------------------
+Jeder, der den Link kennt, kann eintragen und auslosen. Das ist fuer
+eine Handvoll Kumpels genau richtig. Wenn du es abschliessen willst,
+richte im Kundenbereich deines Anbieters einen Verzeichnisschutz
+(Passwortschutz, .htpasswd) fuer den Ordner ein – daran muss in der App
+nichts geaendert werden.
+
+
+Kleinigkeiten
+-------------
+- Die Schriften (Anton, Barlow) kommen von Google Fonts. Ohne Internet
+  oder wenn du das nicht willst, nimmt der Browser einfach eine
+  Ersatzschrift – die Seite funktioniert weiterhin.
+- Die Seite passt sich dem Hell/Dunkel-Modus des Geraets an.
+- Gleichstand beim Wuerfeln: liegen zwei gleiche Zahlen genau an einer
+  Teamgrenze, entscheidet der Zufall, und die App schreibt eine
+  Warnung unter die Teams. Wenn ihr es genau nehmt, wuerfelt diese
+  beiden nochmal aus und tragt neu ein.

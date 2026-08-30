@@ -1,0 +1,687 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tischsportgruppe</title>
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Barlow:wght@400;500;600;700&display=swap">
+<style>
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0}
+h1,h2,h3,p,ul,ol,figure{margin:0}
+ul,ol{padding:0;list-style:none}
+button,input{font:inherit;color:inherit}
+
+:root{
+  --ground:#EDF1E8;
+  --surface:#FFFFFF;
+  --surface-2:#F5F8F1;
+  --ink:#16221B;
+  --ink-2:#5B6A61;
+  --ink-3:#8C9A91;
+  --line:#D5DCD0;
+  --line-soft:#E4EADE;
+  --pitch:#1C6B45;
+  --pitch-ink:#FFFFFF;
+  --rot:#B93C2B;
+  --blau:#2A57A0;
+  --warn:#9A6A12;
+  --hero-bg:#17583A;
+  --hero-ink:#F1F6EF;
+  --hero-dim:rgba(241,246,239,.72);
+  --hero-line:rgba(255,255,255,.30);
+  --shadow:0 1px 0 rgba(20,34,26,.04),0 10px 28px -18px rgba(20,34,26,.55);
+  --focus:#1C6B45;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --ground:#0D130F;
+    --surface:#151D17;
+    --surface-2:#1A231C;
+    --ink:#E7EEE6;
+    --ink-2:#9DAAA1;
+    --ink-3:#77857C;
+    --line:#293529;
+    --line-soft:#202B22;
+    --pitch:#3EA470;
+    --pitch-ink:#07130C;
+    --rot:#E2775F;
+    --blau:#7EA6E8;
+    --warn:#D9AE55;
+    --hero-bg:#0F3122;
+    --hero-ink:#E8F1E7;
+    --hero-dim:rgba(232,241,231,.68);
+    --hero-line:rgba(255,255,255,.18);
+    --shadow:0 1px 0 rgba(0,0,0,.3),0 10px 28px -18px rgba(0,0,0,.9);
+    --focus:#3EA470;
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#0D130F;
+  --surface:#151D17;
+  --surface-2:#1A231C;
+  --ink:#E7EEE6;
+  --ink-2:#9DAAA1;
+  --ink-3:#77857C;
+  --line:#293529;
+  --line-soft:#202B22;
+  --pitch:#3EA470;
+  --pitch-ink:#07130C;
+  --rot:#E2775F;
+  --blau:#7EA6E8;
+  --warn:#D9AE55;
+  --hero-bg:#0F3122;
+  --hero-ink:#E8F1E7;
+  --hero-dim:rgba(232,241,231,.68);
+  --hero-line:rgba(255,255,255,.18);
+  --shadow:0 1px 0 rgba(0,0,0,.3),0 10px 28px -18px rgba(0,0,0,.9);
+  --focus:#3EA470;
+}
+
+body{
+  background:var(--ground);
+  color:var(--ink);
+  font-family:"Barlow","Segoe UI",system-ui,-apple-system,sans-serif;
+  font-size:16px;line-height:1.55;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:740px;margin:0 auto;padding:22px 18px 84px;display:flex;flex-direction:column;gap:24px}
+:where(button,input,a):focus-visible{outline:2px solid var(--focus);outline-offset:2px;border-radius:4px}
+
+/* ---------- Tisch / Kopf ---------- */
+.table{
+  position:relative;overflow:hidden;isolation:isolate;
+  background:var(--hero-bg);color:var(--hero-ink);
+  border-radius:14px;padding:34px 26px 28px;box-shadow:var(--shadow);
+}
+.table__lines{position:absolute;inset:0;z-index:0;pointer-events:none}
+.table__lines::before,.table__lines::after{content:"";position:absolute;left:14px;right:14px;height:1px;background:var(--hero-line)}
+.table__lines::before{top:14px}
+.table__lines::after{bottom:14px}
+.table__mid{position:absolute;top:14px;bottom:14px;left:50%;width:1px;background:var(--hero-line)}
+.table__circle{position:absolute;top:50%;left:50%;width:190px;height:190px;margin:-95px 0 0 -95px;border:1px solid var(--hero-line);border-radius:50%}
+.table > *:not(.table__lines){position:relative;z-index:1}
+.eyebrow{font-size:11px;font-weight:600;letter-spacing:.20em;text-transform:uppercase;color:var(--hero-dim);margin-bottom:10px}
+h1{font-family:"Anton","Barlow Condensed",Impact,sans-serif;font-weight:400;font-size:clamp(31px,9.8vw,58px);line-height:.96;text-transform:uppercase;text-wrap:balance;overflow-wrap:anywhere}
+.lede{margin-top:12px;max-width:46ch;color:var(--hero-dim);font-size:15.5px}
+.pill{display:inline-flex;align-items:center;gap:7px;margin-top:16px;border:1px solid var(--hero-line);border-radius:999px;padding:4px 11px 4px 9px;font-size:11.5px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--hero-dim)}
+.pill i{width:7px;height:7px;border-radius:50%;background:currentColor;flex:none}
+.pill--live i{background:#5FD79B}
+.pill--local i{background:#E0B44F}
+
+/* ---------- Karten ---------- */
+.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:20px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:14px}
+.card__head{display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap}
+h2{font-family:"Anton","Barlow Condensed",Impact,sans-serif;font-weight:400;font-size:19px;letter-spacing:.05em;text-transform:uppercase;line-height:1.1;display:flex;align-items:baseline;gap:9px}
+.step{color:var(--ink-3);font-size:14px;font-variant-numeric:tabular-nums}
+.count{font-size:12.5px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);font-variant-numeric:tabular-nums}
+
+/* ---------- Eingabe ---------- */
+.add{display:flex;gap:8px}
+.add input{flex:1;min-width:0;background:var(--surface-2);border:1px solid var(--line);border-radius:8px;padding:10px 12px;font-size:15.5px}
+.add input::placeholder{color:var(--ink-3)}
+.btn{border:1px solid var(--line);background:var(--surface-2);color:var(--ink);border-radius:8px;padding:10px 15px;cursor:pointer;font-size:12.5px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;transition:background .15s ease,border-color .15s ease,transform .08s ease}
+.btn:hover{background:var(--line-soft);border-color:var(--ink-3)}
+.btn:active{transform:translateY(1px)}
+.btn[disabled]{opacity:.42;cursor:not-allowed;transform:none}
+.btn--solid{background:var(--pitch);border-color:var(--pitch);color:var(--pitch-ink)}
+.btn--solid:hover{background:var(--pitch);border-color:var(--pitch);filter:brightness(1.08)}
+
+.roster{display:flex;flex-wrap:wrap;gap:8px}
+.chip{display:inline-flex;align-items:center;gap:8px;background:var(--surface-2);border:1px solid var(--line);border-radius:999px;padding:5px 6px 5px 13px;font-size:15px;font-weight:500}
+.chip--new{border-style:dashed;border-color:var(--pitch)}
+.chip button{border:0;background:transparent;color:var(--ink-3);cursor:pointer;width:22px;height:22px;border-radius:50%;line-height:1;font-size:17px;padding:0}
+.chip button:hover{background:var(--line);color:var(--ink)}
+.empty{color:var(--ink-3);font-size:15px}
+
+/* ---------- Auswahl ---------- */
+.seg{display:flex;gap:6px;background:var(--surface-2);border:1px solid var(--line);border-radius:10px;padding:5px}
+.seg button{flex:1;border:0;background:transparent;border-radius:7px;padding:9px 8px;cursor:pointer;font-size:12.5px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-2);transition:background .15s ease,color .15s ease}
+.seg button[aria-pressed="true"]{background:var(--surface);color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.12)}
+.hint{font-size:13.5px;color:var(--ink-2)}
+
+/* ---------- Würfeleingabe ---------- */
+.rolls{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:8px}
+.rollrow{display:flex;align-items:center;gap:10px;background:var(--surface-2);border:1px solid var(--line);border-radius:9px;padding:7px 8px 7px 13px}
+.rollrow.is-set{border-color:var(--pitch)}
+.rollrow label{flex:1;min-width:0;font-weight:600;font-size:15px;overflow-wrap:anywhere}
+.rollrow input{
+  width:62px;flex:none;text-align:center;background:var(--surface);
+  border:1px solid var(--line);border-radius:7px;padding:8px 4px;
+  font-family:"Anton",Impact,sans-serif;font-size:18px;letter-spacing:.04em;
+  font-variant-numeric:tabular-nums;
+}
+.rollrow input::-webkit-outer-spin-button,.rollrow input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+.rollrow input[type=number]{-moz-appearance:textfield}
+
+/* ---------- Aktion ---------- */
+.actions{display:flex;flex-direction:column;gap:10px}
+.draw{width:100%;padding:19px 16px;border-radius:12px;border:1px solid var(--pitch);background:var(--pitch);color:var(--pitch-ink);cursor:pointer;font-family:"Anton","Barlow Condensed",Impact,sans-serif;font-weight:400;font-size:23px;letter-spacing:.09em;text-transform:uppercase;transition:filter .15s ease,transform .08s ease}
+.draw:hover{filter:brightness(1.08)}
+.draw:active{transform:translateY(1px)}
+.draw[disabled]{opacity:.4;cursor:not-allowed;transform:none}
+.row{display:flex;gap:8px;flex-wrap:wrap}
+.note{display:flex;gap:9px;font-size:13.5px;color:var(--ink-2);background:var(--surface-2);border:1px solid var(--line);border-left:3px solid var(--pitch);border-radius:8px;padding:10px 12px}
+.note--warn{border-left-color:var(--warn)}
+
+/* ---------- Ergebnis ---------- */
+.result{display:flex;flex-direction:column;gap:24px}
+.stamp{font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);font-variant-numeric:tabular-nums;align-self:center}
+
+.teams{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:9px}
+.team{display:flex;align-items:center;gap:11px;background:var(--surface-2);border:1px solid var(--line);border-radius:9px;padding:11px 13px}
+.team__no{font-family:"Anton",Impact,sans-serif;font-size:13px;color:var(--ink-3);min-width:24px;font-variant-numeric:tabular-nums}
+.team__names{font-weight:600;font-size:15.5px;line-height:1.35}
+.team__names em{font-style:normal;font-weight:400;color:var(--ink-3);padding:0 3px}
+.roll{
+  display:inline-block;margin-left:4px;vertical-align:1px;
+  font-family:"Anton",Impact,sans-serif;font-size:11px;letter-spacing:.04em;
+  color:var(--ink-2);background:var(--surface);border:1px solid var(--line);
+  border-radius:5px;padding:1px 5px;font-variant-numeric:tabular-nums
+}
+
+.matches{display:flex;flex-direction:column;gap:7px}
+.match{display:flex;align-items:center;gap:13px;background:var(--surface);border:1px solid var(--line);border-radius:9px;padding:12px 14px}
+.match__no{font-family:"Anton",Impact,sans-serif;font-size:14px;color:var(--ink-3);min-width:26px;font-variant-numeric:tabular-nums}
+.match__grid{flex:1;min-width:0;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:10px}
+.side{display:flex;align-items:center;gap:8px;min-width:0}
+.side em{font-style:normal;font-weight:600;font-size:15px;line-height:1.25;overflow-wrap:anywhere;color:var(--ink)}
+.side--a{color:var(--rot)}
+.side--b{color:var(--blau);flex-direction:row-reverse;text-align:right}
+.fig{width:13px;height:17px;flex:none;fill:currentColor}
+.vs{font-family:"Anton",Impact,sans-serif;font-size:11.5px;letter-spacing:.10em;color:var(--ink-3);text-transform:uppercase;border:1px solid var(--line);border-radius:999px;padding:2px 8px}
+@media (max-width:520px){
+  .match__grid{grid-template-columns:1fr;gap:5px;justify-items:start}
+  .side--b{flex-direction:row;text-align:left}
+}
+
+.bench{display:flex;align-items:baseline;gap:10px;font-size:14.5px;color:var(--ink-2);flex-wrap:wrap}
+.bench b{font-weight:600;color:var(--ink)}
+.bench__label{font-size:11.5px;font-weight:600;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-3)}
+
+.blank{border:1px dashed var(--line);border-radius:12px;background:var(--surface-2);padding:30px 22px;text-align:center;color:var(--ink-2);display:flex;flex-direction:column;gap:6px;align-items:center}
+.blank strong{font-family:"Anton",Impact,sans-serif;font-weight:400;font-size:19px;letter-spacing:.05em;text-transform:uppercase;color:var(--ink)}
+
+.toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);background:var(--ink);color:var(--ground);border-radius:999px;padding:9px 18px;font-size:14px;font-weight:500;box-shadow:0 12px 30px -12px rgba(0,0,0,.6);max-width:calc(100% - 32px);text-align:center;z-index:20}
+footer{color:var(--ink-3);font-size:12.5px;text-align:center}
+
+.reveal{animation:rise .48s cubic-bezier(.2,.75,.25,1) backwards;animation-delay:var(--d,0ms)}
+@keyframes rise{from{opacity:0;transform:translateY(9px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion: reduce){.reveal{animation:none}*{transition:none!important}}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+(function(){
+"use strict";
+
+/* ================================================================
+   Kickerlos – Teams und Paarungen fuer den Kickerabend
+   Der gemeinsame Stand liegt in daten/stand.json, angesprochen
+   ueber api.php. Ohne PHP faellt die Seite auf localStorage
+   zurueck (dann sieht jeder nur seinen eigenen Stand).
+   ================================================================ */
+
+var API="api.php";
+var LEER={v:3,players:[],pairMode:"dice",draw:null};
+
+/* ---------- Speicher ---------- */
+
+var Store=(function(){
+  var modus="lokal";
+  function lokalLaden(){
+    try{var r=localStorage.getItem("kickerlos");return r?JSON.parse(r):null}catch(e){return null}
+  }
+  function lokalSpeichern(o){
+    try{localStorage.setItem("kickerlos",JSON.stringify(o))}catch(e){}
+  }
+  return {
+    modus:function(){return modus},
+    laden:function(){
+      return fetch(API,{cache:"no-store"})
+        .then(function(r){if(!r.ok)throw new Error("http");return r.json()})
+        .then(function(d){
+          if(!d||typeof d.rev!=="number")throw new Error("format");
+          modus="server";return d;
+        })
+        .catch(function(){modus="lokal";return lokalLaden()});
+    },
+    speichern:function(state,rev){
+      if(modus==="lokal"){
+        var o={rev:rev+1,state:state};lokalSpeichern(o);return Promise.resolve(o);
+      }
+      return fetch(API,{
+        method:"POST",
+        headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({rev:rev,state:state})
+      }).then(function(r){
+        return r.json().catch(function(){return {}}).then(function(d){
+          if(r.status===409){
+            var k=new Error("konflikt");k.konflikt=true;k.rev=d.rev||0;k.state=d.state||LEER;throw k;
+          }
+          if(!r.ok)throw new Error(d&&d.fehler?d.fehler:"Server antwortet nicht");
+          return d;
+        });
+      });
+    }
+  };
+})();
+
+/* ---------- Helfer ---------- */
+
+function esc(s){return String(s).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]})}
+function pad(n){return n<10?"0"+n:""+n}
+function spiele(n){return n===1?"1 Spiel":n+" Spiele"}
+
+function shuffle(a){
+  var b=a.slice(),i,j,t;
+  for(i=b.length-1;i>0;i--){j=Math.floor(Math.random()*(i+1));t=b[i];b[i]=b[j];b[j]=t}
+  return b;
+}
+
+function roundRobin(n){
+  var idx=[],i,r;
+  for(i=0;i<n;i++)idx.push(i);
+  if(n%2)idx.push(-1);
+  var m=idx.length,arr=idx.slice(),out=[];
+  for(r=0;r<m-1;r++){
+    for(i=0;i<m/2;i++){
+      var a=arr[i],b=arr[m-1-i];
+      if(a>=0&&b>=0)out.push(r%2?[b,a]:[a,b]);
+    }
+    arr=[arr[0],arr[m-1]].concat(arr.slice(1,m-1));
+  }
+  return out;
+}
+
+/* Reihenfolge -> Teams: 1.+2. zusammen, 3.+4. zusammen, ... */
+function buildFromOrder(order,by,ties){
+  var list=order.slice(),bench=[],teams=[],i;
+  if(list.length%2)bench.push(list.pop());
+  for(i=0;i<list.length;i+=2)teams.push([list[i],list[i+1]]);
+  return {
+    by:by,order:order,teams:teams,bench:bench,ties:ties||[],
+    matches:roundRobin(teams.length),
+    at:new Date().toISOString()
+  };
+}
+
+function drawByDice(players,rolls){
+  var order=shuffle(players).map(function(n){return {n:n,r:rolls[n]}});
+  order.sort(function(a,b){return b.r-a.r});
+  var ties=[],i;
+  for(i=1;i<order.length;i+=2){
+    if(i+1<order.length&&order[i].r===order[i+1].r&&ties.indexOf(order[i].r)<0)ties.push(order[i].r);
+  }
+  return buildFromOrder(order,"dice",ties);
+}
+
+function drawByRandom(players){
+  return buildFromOrder(shuffle(players).map(function(n){return {n:n,r:null}}),"random",[]);
+}
+
+function normalize(s){
+  if(!s||!Array.isArray(s.players))return {v:3,players:[],pairMode:"dice",draw:null};
+  return {
+    v:3,
+    players:s.players,
+    pairMode:s.pairMode==="random"?"random":"dice",
+    draw:s.draw||null
+  };
+}
+
+/* ---------- Zustand ---------- */
+
+var published={v:3,players:[],pairMode:"dice",draw:null};
+var rev=0,geladen=false;
+var draft=[],draftPair="dice",rolls={};
+var inputValue="",busy=false,firstPaint=true,toastTimer=null;
+
+function syncDraft(){draft=published.players.slice();draftPair=published.pairMode}
+
+function dirty(){
+  return draft.join(" ")!==published.players.join(" ")||draftPair!==published.pairMode;
+}
+
+function toast(msg){
+  var el=document.getElementById("toast");
+  if(el)el.remove();
+  el=document.createElement("div");
+  el.id="toast";el.className="toast";el.setAttribute("role","status");el.textContent=msg;
+  document.body.appendChild(el);
+  clearTimeout(toastTimer);
+  toastTimer=setTimeout(function(){if(el)el.remove()},4600);
+}
+
+function uebernehmeRolls(d){
+  if(d&&d.by==="dice"&&d.order){
+    d.order.forEach(function(p){if(typeof p.r==="number"&&rolls[p.n]===undefined)rolls[p.n]=p.r});
+  }
+}
+
+function save(next){
+  if(busy)return;
+  busy=true;render();
+  Store.speichern(next,rev).then(function(d){
+    rev=d.rev;published=normalize(d.state);syncDraft();
+    busy=false;firstPaint=true;render();
+    if(Store.modus()==="lokal")toast("Nur in diesem Browser gespeichert – die anderen sehen das nicht.");
+  }).catch(function(e){
+    busy=false;
+    if(e&&e.konflikt){
+      var warDirty=dirty();
+      rev=e.rev;published=normalize(e.state);
+      if(!warDirty)syncDraft();
+      firstPaint=true;render();
+      toast("Jemand war schneller – hier ist der neue Stand. Schau drüber und mach es nochmal.");
+      return;
+    }
+    render();
+    toast("Speichern hat nicht geklappt: "+((e&&e.message)||"unbekannter Fehler"));
+  });
+}
+
+/* ---------- Aktionen ---------- */
+
+function addPlayer(){
+  var name=inputValue.trim().replace(/\s+/g," ");
+  if(!name)return;
+  if(name.length>24){toast("Bitte einen kürzeren Namen (höchstens 24 Zeichen).");return}
+  if(draft.length>=24){toast("Mehr als 24 Teilnehmer passen nicht an einen Abend.");return}
+  var low=name.toLowerCase(),i;
+  for(i=0;i<draft.length;i++){
+    if(draft[i].toLowerCase()===low){toast(draft[i]+" steht schon auf der Liste.");return}
+  }
+  draft.push(name);inputValue="";render(true);
+}
+
+function removePlayer(i){
+  var name=draft[i];
+  draft.splice(i,1);
+  delete rolls[name];
+  render();
+}
+
+function setPair(m){if(draftPair!==m){draftPair=m;render()}}
+
+function missingRolls(){
+  var out=[],i,v;
+  for(i=0;i<draft.length;i++){
+    v=rolls[draft[i]];
+    if(typeof v!=="number"||!isFinite(v))out.push(draft[i]);
+  }
+  return out;
+}
+
+function doDraw(){
+  if(draft.length<4){toast("Für Doppel braucht ihr mindestens vier Teilnehmer.");return}
+  var d;
+  if(draftPair==="dice"){
+    var miss=missingRolls();
+    if(miss.length){
+      toast("Es fehlen noch Würfe: "+miss.slice(0,4).join(", ")+(miss.length>4?" und "+(miss.length-4)+" weitere":"")+".");
+      return;
+    }
+    d=drawByDice(draft,rolls);
+  }else{
+    d=drawByRandom(draft);
+  }
+  save({v:3,players:draft.slice(),pairMode:draftPair,draw:d});
+}
+
+function saveRoster(){
+  save({v:3,players:draft.slice(),pairMode:draftPair,draw:published.draw});
+}
+
+function nameWithRoll(p,plain){
+  if(p.r===null||p.r===undefined)return plain?p.n:esc(p.n);
+  return plain?p.n+" ("+p.r+")":esc(p.n)+'<span class="roll">'+p.r+'</span>';
+}
+
+function plainList(){
+  var d=published.draw;if(!d)return "";
+  var out=["TISCHSPORTGRUPPE – "+stamp(d.at),d.by==="dice"?"Teams nach euren Würfeln":"Teams von der App gelost","","Teams:"],i;
+  for(i=0;i<d.teams.length;i++){
+    out.push("T"+(i+1)+"  "+nameWithRoll(d.teams[i][0],true)+" & "+nameWithRoll(d.teams[i][1],true));
+  }
+  out.push("","Paarungen:");
+  for(i=0;i<d.matches.length;i++){
+    var m=d.matches[i],a=d.teams[m[0]],b=d.teams[m[1]];
+    out.push(pad(i+1)+"  "+a[0].n+" & "+a[1].n+"  vs  "+b[0].n+" & "+b[1].n);
+  }
+  if(d.bench&&d.bench.length){
+    out.push("","Pausiert: "+d.bench.map(function(p){return nameWithRoll(p,true)}).join(", "));
+  }
+  return out.join("\n");
+}
+
+function copyList(){
+  var text=plainList();if(!text)return;
+  var done=function(){toast("Alles kopiert – ab in die Gruppe.")};
+  var fallback=function(){
+    var ta=document.createElement("textarea");
+    ta.value=text;ta.style.position="fixed";ta.style.opacity="0";
+    document.body.appendChild(ta);ta.select();
+    var ok=false;try{ok=document.execCommand("copy")}catch(e){}
+    ta.remove();
+    ok?done():toast("Kopieren geht hier nicht – bitte von Hand markieren.");
+  };
+  if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(text).then(done,fallback);
+  else fallback();
+}
+
+/* ---------- Darstellung ---------- */
+
+function stamp(iso){
+  var d=new Date(iso);
+  if(isNaN(d))return "";
+  return d.toLocaleString("de-DE",{day:"2-digit",month:"2-digit",year:"numeric",hour:"2-digit",minute:"2-digit"})+" Uhr";
+}
+
+var FIG='<svg class="fig" viewBox="0 0 12 17" aria-hidden="true"><rect x="0" y="0" width="12" height="2.2" rx="1.1"/><circle cx="6" cy="6.4" r="2.7"/><path d="M3.3 9.8h5.4v3.1H7.3V17H4.7v-4.1H3.3z"/></svg>';
+
+function statusPill(){
+  if(!geladen)return "";
+  if(Store.modus()==="server")return '<p class="pill pill--live"><i></i>Für alle gespeichert</p>';
+  return '<p class="pill pill--local"><i></i>Nur in diesem Browser</p>';
+}
+
+function rosterHTML(){
+  if(!draft.length)return '<p class="empty">Noch niemand eingetragen. Ersten Namen tippen, dann Enter.</p>';
+  var pub={},i,out=[];
+  for(i=0;i<published.players.length;i++)pub[published.players[i]]=true;
+  for(i=0;i<draft.length;i++){
+    out.push('<li class="chip'+(pub[draft[i]]?"":" chip--new")+'">'+esc(draft[i])
+      +'<button type="button" data-remove="'+i+'" aria-label="'+esc(draft[i])+' entfernen">&times;</button></li>');
+  }
+  return '<ul class="roster">'+out.join("")+'</ul>';
+}
+
+function rollsHTML(){
+  if(!draft.length)return '<p class="empty">Erst Teilnehmer eintragen, dann könnt ihr würfeln.</p>';
+  var out=[],i,v;
+  for(i=0;i<draft.length;i++){
+    v=rolls[draft[i]];
+    out.push('<div class="rollrow'+(typeof v==="number"?" is-set":"")+'">'
+      +'<label for="roll'+i+'">'+esc(draft[i])+'</label>'
+      +'<input id="roll'+i+'" data-roll="'+i+'" type="number" inputmode="numeric" min="1" max="999" step="1"'
+      +' placeholder="–" value="'+(typeof v==="number"?v:"")+'" aria-label="Wurf von '+esc(draft[i])+'"></div>');
+  }
+  return '<div class="rolls">'+out.join("")+'</div>';
+}
+
+function resultHTML(){
+  var d=published.draw;
+  if(!d){
+    return '<div class="blank"><strong>Noch nichts entschieden</strong>'
+      +'<span>Sobald ihr gewürfelt und die Zahlen eingetragen habt, stehen hier die Teams und alle Paarungen.</span></div>';
+  }
+  var i,html="",delay=0,step=firstPaint?45:0;
+
+  html+='<div class="card"><div class="card__head"><h2>Die Teams</h2>'
+    +'<span class="count">'+d.teams.length+' Doppel · '+(d.by==="dice"?"nach Wurf":"von der App gelost")+'</span></div>'
+    +'<ul class="teams">';
+  for(i=0;i<d.teams.length;i++){
+    html+='<li class="team'+(firstPaint?" reveal":"")+'" style="--d:'+(delay+=step)+'ms">'
+      +'<span class="team__no">T'+(i+1)+'</span>'
+      +'<span class="team__names">'+nameWithRoll(d.teams[i][0])+' <em>&amp;</em> '+nameWithRoll(d.teams[i][1])+'</span></li>';
+  }
+  html+='</ul>';
+  if(d.bench&&d.bench.length){
+    html+='<p class="bench"><span class="bench__label">Pausiert</span><b>'
+      +d.bench.map(function(p){return nameWithRoll(p)}).join(", ")
+      +'</b><span>'+(d.by==="dice"?"– niedrigster Wurf, sitzt die Runde aus.":"– ungerade Anzahl, sitzt die Runde aus.")+'</span></p>';
+  }
+  if(d.ties&&d.ties.length){
+    html+='<p class="note note--warn"><span>Gleichstand bei '+d.ties.join(" und ")
+      +' – zwischen diesen Würfen hat die App entschieden. Wenn ihr es genau nehmt: nochmal würfeln lassen und neu eintragen.</span></p>';
+  }
+  html+='</div>';
+
+  html+='<div class="card"><div class="card__head"><h2>Die Paarungen</h2>'
+    +'<span class="count">'+spiele(d.matches.length)+'</span></div><ol class="matches">';
+  for(i=0;i<d.matches.length;i++){
+    var m=d.matches[i],a=d.teams[m[0]],b=d.teams[m[1]];
+    html+='<li class="match'+(firstPaint?" reveal":"")+'" style="--d:'+(delay+=step)+'ms">'
+      +'<span class="match__no">'+pad(i+1)+'</span><div class="match__grid">'
+      +'<span class="side side--a">'+FIG+'<em>'+esc(a[0].n)+' &amp; '+esc(a[1].n)+'</em></span>'
+      +'<span class="vs">vs</span>'
+      +'<span class="side side--b">'+FIG+'<em>'+esc(b[0].n)+' &amp; '+esc(b[1].n)+'</em></span>'
+      +'</div></li>';
+  }
+  html+='</ol>';
+  html+='<div class="row"><button class="btn" type="button" data-copy>Alles kopieren</button>'
+    +'<span class="stamp">Gemacht am '+esc(stamp(d.at))+'</span></div></div>';
+
+  return '<div class="result">'+html+'</div>';
+}
+
+function render(focusInput){
+  var app=document.getElementById("app");
+  if(!app)return;
+  var few=draft.length<4;
+  var dice=draftPair==="dice";
+  var teamsN=Math.floor(draft.length/2);
+  var games=teamsN*(teamsN-1)/2;
+
+  app.innerHTML=
+    '<div class="wrap">'
+    +'<header class="table">'
+      +'<div class="table__lines" aria-hidden="true"><span class="table__mid"></span><span class="table__circle"></span></div>'
+      +'<p class="eyebrow">Kickerabend · Doppel</p>'
+      +'<h1>Tischsportgruppe</h1>'
+      +'<p class="lede">Der Tisch entscheidet, wir verteilen nur.</p>'
+      +statusPill()
+    +'</header>'
+
+    +'<section class="card">'
+      +'<div class="card__head"><h2><span class="step">1</span>Wer ist dabei?</h2>'
+      +'<span class="count">'+draft.length+' Teilnehmer</span></div>'
+      +'<form class="add">'
+        +'<input id="name" type="text" autocomplete="off" placeholder="Name eintragen" value="'+esc(inputValue)+'" maxlength="24" aria-label="Name eintragen">'
+        +'<button class="btn btn--solid" type="submit">Rein damit</button>'
+      +'</form>'
+      +rosterHTML()
+      +(dirty()?'<div class="note note--warn"><span>Deine Änderungen sehen die anderen erst nach dem Speichern – oder automatisch, sobald du die Teams bildest.</span></div>'
+        +'<div class="row"><button class="btn" type="button" data-save '+(busy?"disabled":"")+'>Stand speichern</button></div>':"")
+    +'</section>'
+
+    +'<section class="card">'
+      +'<div class="card__head"><h2><span class="step">2</span>Wie werden die Teams gebildet?</h2></div>'
+      +'<div class="seg" role="group" aria-label="Art der Teambildung">'
+        +'<button type="button" data-pair="dice" aria-pressed="'+dice+'">Wir würfeln selbst</button>'
+        +'<button type="button" data-pair="random" aria-pressed="'+(!dice)+'">Die App würfelt</button>'
+      +'</div>'
+      +(dice
+        ? '<p class="hint">Jeder würfelt einmal, ihr tragt die Zahlen ein. Höchster Wurf spielt mit dem zweithöchsten, dann immer weiter nach unten. Bei ungerader Anzahl pausiert der niedrigste Wurf.</p>'+rollsHTML()
+        : '<p class="hint">Die App mischt die Namen und bildet daraus die Doppel. Bei ungerader Anzahl setzt einer zufällig aus.</p>')
+    +'</section>'
+
+    +'<div class="actions">'
+      +'<button class="draw" type="button" data-draw '+(busy||few?"disabled":"")+'>'
+      +(busy?"Wird verteilt…":(published.draw?"Neu bilden":(dice?"Teams bilden":"Teams auslosen")))+'</button>'
+      +(few?'<p class="note note--warn"><span>'+(4-draft.length===1?"Für Doppel fehlt noch ein Teilnehmer":"Für Doppel fehlen noch "+(4-draft.length)+" Teilnehmer")+' – ab vier geht es los.</span></p>'
+        :'<p class="hint" style="text-align:center">Jedes Doppel gegen jedes andere – macht '+spiele(games)+'.'
+          +(published.draw?' Neu bilden überschreibt Teams und Paarungen für alle.':'')+'</p>')
+    +'</div>'
+
+    +resultHTML()
+    +'<footer>Tischsportgruppe · alle eintragen, würfeln und kickern</footer>'
+    +'</div>';
+
+  if(focusInput){var el=document.getElementById("name");if(el)el.focus()}
+  firstPaint=false;
+}
+
+function wire(app){
+  app.addEventListener("submit",function(e){e.preventDefault();addPlayer()});
+  app.addEventListener("input",function(e){
+    var t=e.target;
+    if(!t)return;
+    if(t.id==="name"){inputValue=t.value;return}
+    if(t.hasAttribute&&t.hasAttribute("data-roll")){
+      var name=draft[parseInt(t.getAttribute("data-roll"),10)];
+      if(name===undefined)return;
+      var raw=t.value.trim();
+      if(raw===""){delete rolls[name];t.parentNode.classList.remove("is-set");return}
+      var v=parseInt(raw,10);
+      if(isNaN(v)){delete rolls[name];t.parentNode.classList.remove("is-set");return}
+      rolls[name]=v;t.parentNode.classList.add("is-set");
+    }
+  });
+  app.addEventListener("click",function(e){
+    var el=e.target;
+    var t=el&&el.closest?el.closest("[data-remove],[data-pair],[data-draw],[data-save],[data-copy]"):null;
+    if(!t)return;
+    if(t.hasAttribute("data-remove"))removePlayer(parseInt(t.getAttribute("data-remove"),10));
+    else if(t.hasAttribute("data-pair"))setPair(t.getAttribute("data-pair"));
+    else if(t.hasAttribute("data-draw"))doDraw();
+    else if(t.hasAttribute("data-save"))saveRoster();
+    else if(t.hasAttribute("data-copy"))copyList();
+  });
+}
+
+/* Alle 6 Sekunden nachsehen, ob jemand anders gespeichert hat. */
+function poll(){
+  if(busy||Store.modus()!=="server")return;
+  var ae=document.activeElement;
+  if(ae&&ae.tagName==="INPUT")return;
+  fetch(API,{cache:"no-store"})
+    .then(function(r){return r.ok?r.json():null})
+    .then(function(d){
+      if(!d||typeof d.rev!=="number"||d.rev===rev)return;
+      var warDirty=dirty();
+      rev=d.rev;published=normalize(d.state);
+      if(!warDirty)syncDraft();
+      uebernehmeRolls(published.draw);
+      firstPaint=true;render();
+    })
+    .catch(function(){});
+}
+
+/* ---------- Start ---------- */
+
+function boot(){
+  render();
+  wire(document.getElementById("app"));
+  Store.laden().then(function(d){
+    if(d&&d.state){rev=d.rev||0;published=normalize(d.state)}
+    syncDraft();
+    uebernehmeRolls(published.draw);
+    geladen=true;firstPaint=true;render();
+    setInterval(poll,6000);
+  });
+}
+
+if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",boot);
+else boot();
+
+})();
+</script>
+</body>
+</html>
