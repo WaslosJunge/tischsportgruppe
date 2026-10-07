@@ -257,7 +257,7 @@ const space=(c1='#0d1130')=>`<rect x="-20" y="-20" width="440" height="340" fill
 const deck=`<rect x="-20" y="254" width="440" height="66" fill="#59627a"/><path ${sk} d="M-5 254 H405" fill="none"/>`;
 
 const scenes=[
-{ name:'1 · Transporter', cap:'„Scotty, beam mich hoch!“ – „Geht nicht, Captain. Dein Arsch hängt noch im Frachtraum.“',
+{ name:'1 · Transporter', cap:'„Ich bin Ingenieur, kein Wunderheiler, Captain. Für Sie bräuchte ich zwei Transporter und eine Baugenehmigung.“',
   svg:()=>`<svg viewBox="0 0 400 300" class="t1">${space()}${deck}
   <g class="pad"><ellipse ${sk} cx="180" cy="254" rx="105" ry="16" fill="#2b3350"/><ellipse cx="180" cy="252" rx="84" ry="9" fill="#7fe9ff" opacity=".7"/></g>
   <path class="sk crack" fill="none" d="M120 254 l20 8 l-12 8 M240 254 l-16 8 l14 8"/>
@@ -265,10 +265,10 @@ const scenes=[
   <rect class="beam" x="90" y="40" width="180" height="214" fill="#7fe9ff"/>
   ${[0,1,2,3,4,5].map(i=>`<circle class="spk" cx="${105+i*30}" cy="250" r="4" fill="#fff" style="--d:${(i*.18).toFixed(2)}s"/>`).join('')}
   ${sfx(290,100,'ÜBERLAST!',54)}
-  ${signBox(14,14,250,'FETTSAU-ALARM!','Bitte in 2 Fuhren beamen')}
+  ${signBox(14,14,250,'MUSTERPUFFER:','Überlauf im Bauchbereich')}
   </svg>` },
 
-{ name:'2 · Warp-Absturz', cap:'Warp 9? Mit dem Wanst schafft die Kiste nicht mal Schritttempo.',
+{ name:'2 · Warp-Absturz', cap:'„Ihre Masse krümmt die Raumzeit, Captain. Leider in die falsche Richtung.“',
   svg:()=>`<svg viewBox="0 0 400 300" class="t2">${space('#0a0e2a')}
   <g class="stars">${[30,60,90,120,150,180,210,240].map((y,i)=>`<rect class="st" x="0" y="${y}" width="${50+i%3*20}" height="3" fill="#fff" style="--d:${(i*.03).toFixed(2)}s"/>`).join('')}</g>
   <rect x="-20" y="254" width="440" height="66" fill="#6b5b7a"/><path ${sk} d="M-5 254 H405" fill="none"/>
@@ -281,32 +281,32 @@ const scenes=[
   </g></g>
   ${[0,1,2].map(i=>`<circle class="smoke" ${sk} cx="${150+i*50}" cy="245" r="18" fill="#9aa0ad" style="--d:${(3.3+i*.15).toFixed(2)}s"/>`).join('')}
   ${sfx(268,112,'KAWUMMS!',56)}
-  ${signBox(14,14,250,'ANTRIEB: FURZ','Treibstoff: Schnitzel')}
+  ${signBox(14,14,250,'WARPKERN:','Antimaterie ≠ Antipasti')}
   </svg>` },
 
-{ name:'3 · Replikator', cap:'„Computer, noch eine Pizza.“ – „Halt die Fresse und lauf ’ne Runde, Fettsack.“',
+{ name:'3 · Replikator', cap:'„Pizza. Salami. Die fünfte.“ – „Ich bin ein Replikator, kein Komplize.“',
   svg:()=>`<svg viewBox="0 0 400 300" class="t3">${space('#14183a')}${deck}
   <g class="mach"><rect ${sk} x="4" y="126" width="68" height="128" fill="#4a5270"/><rect ${sk} x="14" y="178" width="48" height="30" fill="#7fe9ff"/><rect ${sk} x="14" y="138" width="48" height="20" fill="#222a45"/></g>
   ${pig({eyes:'wide'})}
   ${[.3,.9,1.4,1.8,2.1].map(d=>`<g class="plate" style="--d:${d}s;transform-origin:38px 195px"><circle ${sk} cx="38" cy="195" r="15" fill="#ffd21f"/><circle cx="32" cy="191" r="3.5" fill="#e5262b"/><circle cx="44" cy="198" r="3.5" fill="#e5262b"/><circle cx="36" cy="202" r="3" fill="#e5262b"/></g>`).join('')}
   ${[0,1,2].map(i=>`<circle class="smoke" ${sk} cx="${30+i*14}" cy="120" r="12" fill="#9aa0ad" style="--d:${(3+i*.12).toFixed(2)}s"/>`).join('')}
-  ${sfx(290,100,'NEIN!',62)}
-  ${signBox(14,14,250,'REPLIKATOR:','Verpiss dich, Vielfraß!')}
+  ${sfx(282,100,'VERWEIGERT!',44)}
+  ${signBox(14,14,250,'REPLIKATOR:','Ethik-Subroutine aktiv')}
   </svg>` },
 
-{ name:'4 · Tricorder-Scan', cap:'Befund: 80 % Schwein, 20 % Schnitzel, 0 % Selbstbeherrschung.',
+{ name:'4 · Tricorder-Scan', cap:'„Faszinierend. 3.847 Kilokalorien – und kein einziger rationaler Grund dafür.“',
   svg:()=>`<svg viewBox="0 0 400 300" class="t4">${space('#101a2e')}${deck}
   ${pig({eyes:'wide'})}
   <g class="scanwrap"><rect class="scan" x="70" y="96" width="260" height="6" rx="3" fill="#7fe9ff" opacity=".85"/></g>
   <g class="dev"><rect ${sk} x="324" y="196" width="58" height="56" rx="8" fill="#6b738f"/><rect ${sk} x="332" y="204" width="42" height="22" fill="#7cff9e"/><circle cx="341" cy="240" r="4" fill="#e5262b"/><circle cx="357" cy="240" r="4" fill="#ffd21f"/></g>
   <rect ${sk} x="14" y="14" width="214" height="86" fill="#0b1d2b"/>
   <text class="t l1" x="26" y="40" font-size="19" style="fill:#7cff9e">ANALYSE LÄUFT…</text>
-  <text class="t l2" x="26" y="64" font-size="19" style="fill:#7cff9e">LEBENSFORM: FETTSAU</text>
-  <text class="t l3" x="26" y="88" font-size="19" style="fill:#ff6b6b">BMI: FEHLER – ZU HOCH</text>
-  ${sfx(305,90,'WÜRG!',62)}
+  <text class="t l2" x="26" y="64" font-size="19" style="fill:#7cff9e">LEBENSFORM: SCHWEIN</text>
+  <text class="t l3" x="26" y="88" font-size="19" style="fill:#ff6b6b">LOGIK: NICHT GEFUNDEN</text>
+  ${sfx(300,90,'UNLOGISCH!',48)}
   </svg>` },
 
-{ name:'5 · Holodeck-Joggen', cap:'12 Sekunden Holodeck-Joggen. Dann lag der Speck am Boden.',
+{ name:'5 · Holodeck-Joggen', cap:'Der Kobayashi-Maru-Test fürs Hüftgold: unbesiegbar. Selbst Kirk hätte hier geschummelt.',
   svg:()=>`<svg viewBox="0 0 400 300" class="t5"><rect x="-20" y="-20" width="440" height="340" fill="#0a0f1f"/>
   <g class="grid" stroke="#ffb02e" stroke-width="2" opacity="1">${[0,1,2,3,4,5,6,7].map(i=>`<path d="M-20 ${254+i*9} H420"/>`).join('')}${[...Array(14)].map((_,i)=>`<path d="M${i*32-30} 254 L${200+(i-6.5)*90} 330"/>`).join('')}${[0,1,2,3,4].map(i=>`<path d="M-20 ${40+i*40} H420" opacity=".25"/>`).join('')}</g>
   <path ${sk} d="M-5 254 H405" fill="none"/>
@@ -314,7 +314,7 @@ const scenes=[
   ${[0,1,2].map(i=>`<path class="sw" ${sk} d="M${250+i*18} ${110-i*6} q-6 10 0 14 q6 -4 0 -14z" fill="#8fd8ff" style="--d:${(i*.25).toFixed(2)}s;--dx:${20+i*14}px"/>`).join('')}
   <rect class="gl" x="0" y="90" width="400" height="10" fill="#00e5ff"/><rect class="gl" x="0" y="170" width="400" height="14" fill="#ff2bd6"/><rect class="gl" x="0" y="215" width="400" height="8" fill="#00e5ff"/>
   ${sfx(295,100,'PLATSCH!',58)}
-  ${signBox(14,14,250,'HOLODECK-FEHLER:','Schweinsbraten erkannt')}
+  ${signBox(14,14,250,'SIMULATION:','Kobayashi Waage')}
   </svg>` }
 ];
 
