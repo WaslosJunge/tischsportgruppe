@@ -1,0 +1,336 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>xGem Raumschiff-Alarm</title>
+<link href="https://fonts.googleapis.com/css2?family=Bangers&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#fff7e0;--ink:#1b1b1b;--pink:#ffb3c7;--pink2:#ff8fb0;--red:#e5262b;--yellow:#ffd21f;--sky:#9fd8ff;--paper:#fff}
+@media (prefers-color-scheme:dark){:root{--bg:#1d1a14;--ink:#1b1b1b;--paper:#fff}.ui{color:#fff3d6}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);font-family:Bangers,Impact,"Comic Sans MS",fantasy;letter-spacing:.04em;padding:16px;display:flex;flex-direction:column;align-items:center;gap:14px}
+h1{margin:0;font-size:2rem;color:var(--red);-webkit-text-stroke:1.5px var(--ink);text-shadow:3px 3px 0 var(--ink);text-align:center}
+.ui{font-size:1rem;text-align:center}
+.tabs{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+.tabs button{font:inherit;font-size:1.05rem;letter-spacing:.04em;padding:6px 12px;border:3px solid var(--ink);border-radius:10px;background:var(--yellow);color:var(--ink);cursor:pointer;box-shadow:3px 3px 0 var(--ink)}
+.tabs button.on{background:var(--red);color:#fff}
+.stage{width:100%;max-width:560px;border:5px solid var(--ink);border-radius:6px;background:var(--paper);box-shadow:6px 6px 0 var(--ink);overflow:hidden;position:relative}
+.hud{display:flex;justify-content:space-between;align-items:center;background:var(--red);color:#fff;padding:6px 12px;font-size:1.15rem;border-bottom:5px solid var(--ink)}
+.hud b{color:var(--yellow)}
+svg{display:block;width:100%;height:auto}
+.cap{background:var(--yellow);border-top:5px solid var(--ink);color:var(--ink);padding:8px 12px;font-size:1.35rem;text-align:center;min-height:3em;display:flex;align-items:center;justify-content:center}
+.sk{stroke:var(--ink);stroke-width:5;stroke-linejoin:round;stroke-linecap:round}
+.t{font-family:Bangers,Impact,"Comic Sans MS",fantasy;fill:var(--ink);letter-spacing:.04em}
+.sfx{font-family:Bangers,Impact,fantasy;fill:var(--yellow);stroke:var(--ink);stroke-width:7;paint-order:stroke;stroke-linejoin:round;opacity:0;transform-box:fill-box;transform-origin:center}
+.hide{opacity:0}
+.pop{opacity:0;transform-box:fill-box;transform-origin:center}
+
+/* ---------- gemeinsames Schwein ---------- */
+.belly{transform-origin:180px 190px}
+.pig{transform-origin:180px 252px}
+
+/* ---------- T1 Transporter ---------- */
+.play .t1 .mat{animation:t1flick 1.4s .3s both}
+@keyframes t1flick{0%{opacity:0}10%{opacity:.8}20%{opacity:.1}35%{opacity:1}50%{opacity:.3}70%{opacity:1}100%{opacity:1}}
+.play .t1 .belly{animation:t1fat .9s 1.4s ease-in-out both}
+@keyframes t1fat{0%{transform:scale(1)}100%{transform:scale(1.5)}}
+.play .t1 .shake{animation:shk .07s 2.3s 10 alternate}
+@keyframes shk{from{transform:translateX(-4px)}to{transform:translateX(4px)}}
+.play .t1 .beam{animation:t1beam 2.3s both}
+@keyframes t1beam{0%{opacity:0}10%{opacity:.6}60%{opacity:.4}70%{opacity:.8}100%{opacity:0}}
+.play .t1 .spk{opacity:0;animation:t1spk .9s var(--d) 2 linear forwards}
+@keyframes t1spk{0%{opacity:0;transform:translateY(0)}20%{opacity:1}100%{opacity:0;transform:translateY(-130px)}}
+.play .t1 .pad{animation:padbreak .3s 2.3s both;transform-origin:180px 254px}
+@keyframes padbreak{to{transform:skewX(10deg) scaleY(.5)}}
+.play .t1 .crack{animation:fadein .1s 2.3s both}
+.play .t1 .sfx{animation:sfxpop .5s 2.3s both}
+.play .t1 .sign{animation:bpop .35s 2.9s both}
+
+/* ---------- T2 Warp ---------- */
+.play .t2 .stars{animation:fadeout .3s 2.2s forwards}
+@keyframes fadeout{to{opacity:0}}
+.play .t2 .st{animation:streak .22s linear 10 both;animation-delay:var(--d)}
+@keyframes streak{0%{transform:translateX(460px)}100%{transform:translateX(-120px)}}
+.play .t2 .vib{animation:vib .06s 0s 38 alternate}
+@keyframes vib{from{transform:translateY(-2px)}to{transform:translateY(2px)}}
+.play .t2 .ship{animation:t2fall 1.1s 2.3s ease-in both;transform-origin:200px 170px}
+@keyframes t2fall{0%{transform:none}100%{transform:translateY(78px) rotate(-14deg)}}
+.play .t2 .flame{animation:flick .1s 0s 22 alternate,flameout .3s 2.2s forwards;transform-origin:110px 176px}
+@keyframes flick{from{transform:scaleX(1)}to{transform:scaleX(.7)}}
+@keyframes flameout{to{opacity:0}}
+.play .t2 .pigdome{animation:t2bulge 2s .3s ease-in-out both;transform-origin:200px 160px}
+@keyframes t2bulge{0%{transform:scale(1)}100%{transform:scale(1.7)}}
+.play .t2 .smoke{opacity:0;animation:t2smoke 1.2s var(--d) ease-out forwards}
+@keyframes t2smoke{0%{opacity:0;transform:translateY(0) scale(.4)}25%{opacity:1}100%{opacity:0;transform:translateY(-70px) scale(1.6)}}
+.play .t2 .sfx{animation:sfxpop .5s 3.4s both}
+.play .t2 .sign{animation:bpop .35s 2.6s both}
+
+/* ---------- T3 Replikator ---------- */
+.play .t3 .plate{opacity:0;animation:t3plate .7s var(--d) ease-in forwards}
+@keyframes t3plate{0%{opacity:1;transform:translate(0,0) scale(1)}50%{opacity:1;transform:translate(110px,-95px) scale(1)}100%{opacity:0;transform:translate(247px,-30px) scale(.3)}}
+.play .t3 .belly{animation:t3fat 3s .3s ease-in-out both}
+@keyframes t3fat{0%{transform:scale(1)}100%{transform:scale(1.7)}}
+.play .t3 .mach{animation:shk .07s 3s 10 alternate}
+.play .t3 .smoke{opacity:0;animation:t2smoke 1.2s var(--d) ease-out forwards}
+.play .t3 .sfx{animation:sfxpop .5s 3s both}
+.play .t3 .sign{animation:bpop .35s 3.2s both}
+
+/* ---------- T4 Tricorder ---------- */
+.play .t4 .scanwrap{animation:fadeout .2s 3.3s forwards}
+.play .t4 .scan{animation:t4scan 1s .3s linear 3 both}
+@keyframes t4scan{0%{transform:translateY(0)}100%{transform:translateY(160px)}}
+.play .t4 .l1{animation:fadein .1s .2s both}
+.play .t4 .l2{animation:fadein .1s 3.3s both}
+.play .t4 .l3{animation:fadein .1s 3.9s both}
+.play .t4 .dev{animation:shk .06s 3.3s 14 alternate}
+.play .t4 .belly{animation:t4b 3.3s .2s ease-in-out both}
+@keyframes t4b{0%{transform:scale(1)}100%{transform:scale(1.35)}}
+.play .t4 .sfx{animation:sfxpop .5s 3.3s both}
+
+/* ---------- T5 Holodeck ---------- */
+.play .t5 .run{animation:t5run .18s 0s 13 alternate}
+@keyframes t5run{from{transform:translateY(0)}to{transform:translateY(-20px)}}
+.play .t5 .belly{animation:t5jig .18s 0s 13 alternate}
+@keyframes t5jig{from{transform:scale(1)}to{transform:scale(1.14)}}
+.play .t5 .pig{animation:t5drop .3s 2.5s ease-in both;transform-origin:180px 252px}
+@keyframes t5drop{0%{transform:none}100%{transform:translateY(20px) scale(1.15,.72)}}
+.play .t5 .sw{opacity:0;animation:t5sw .7s var(--d) 3 ease-out forwards}
+@keyframes t5sw{0%{opacity:1;transform:translate(0,0)}100%{opacity:0;transform:translate(var(--dx),-50px)}}
+.play .t5 .grid{animation:glitch .12s 2.6s 8 alternate}
+@keyframes glitch{from{opacity:1}to{opacity:.15}}
+.play .t5 .gl{opacity:0;animation:glbar .12s 2.6s 8 alternate}
+@keyframes glbar{from{opacity:0}to{opacity:.8}}
+.play .t5 .sfx{animation:sfxpop .5s 2.6s both}
+.play .t5 .sign{animation:bpop .35s 3s both}
+
+.sign{opacity:0;transform-box:fill-box;transform-origin:50% 100%}
+.scan{transform-box:view-box}
+.crack{opacity:0}
+/* ---------- gemeinsames Schwein ---------- */
+.belly{transform-origin:180px 190px}
+.pig{transform-origin:180px 252px}
+
+/* ---------- Szene 1: Waage ---------- */
+.play .s1 .pig{animation:s1drop .55s cubic-bezier(.5,0,1,.6) both, s1squash 1.4s 2.0s both}
+@keyframes s1drop{0%{transform:translateY(-260px)}100%{transform:translateY(-26px)}}
+@keyframes s1squash{0%{transform:translateY(-26px)}15%{transform:translateY(20px) scaleY(.82) scaleX(1.08)}100%{transform:translateY(20px) scaleY(.88) scaleX(1.05)}}
+.play .s1 .needle{animation:s1needle .9s .55s ease-in both;transform-origin:320px 262px}
+@keyframes s1needle{0%{transform:rotate(-70deg)}100%{transform:rotate(1500deg)}}
+.play .s1 .dial{animation:s1dial .8s 2.0s ease-out both;transform-origin:320px 262px}
+@keyframes s1dial{0%{transform:none;opacity:1}100%{transform:translate(150px,-210px) rotate(540deg);opacity:1}}
+.play .s1 .spring{animation:s1spring 1.1s 2.0s ease-out both;transform-origin:150px 262px}
+@keyframes s1spring{0%{transform:none}100%{transform:translate(-120px,-230px) rotate(-720deg)}}
+.play .s1 .scalebase{animation:s1base .3s 2.0s both}
+@keyframes s1base{to{transform:translateY(6px) skewX(8deg)}}
+.play .s1 .sfx{animation:sfxpop .5s 2.0s both}
+.play .s1 .bubble{animation:bpop .35s 2.9s both}
+
+/* ---------- Szene 2: Hosenknopf ---------- */
+.play .s2 .belly{animation:s2inflate 1.7s .3s ease-in-out both}
+@keyframes s2inflate{0%{transform:scale(1)}30%{transform:scale(1.25)}40%{transform:scale(1.18)}70%{transform:scale(1.55)}80%{transform:scale(1.45)}100%{transform:scale(1.7)}}
+.play .s2 .pig{animation:s2shake .12s 1.2s 6 alternate}
+@keyframes s2shake{from{transform:translateX(-3px)}to{transform:translateX(3px)}}
+.play .s2 .btn1{animation:hideAt 0s 2.0s both}
+.play .s2 .btnfly{animation:s2fly .7s 2.0s cubic-bezier(.3,0,.9,.6) both;transform-origin:262px 195px}
+@keyframes s2fly{0%{opacity:1;transform:scale(1)}60%{opacity:1;transform:translate(70px,-60px) scale(7)}100%{opacity:0;transform:translate(90px,-70px) scale(14)}}
+.play .s2 .crack{animation:fadein .05s 2.65s both}
+.play .s2 .flash{animation:s2flash .5s 2.65s both}
+@keyframes s2flash{0%{opacity:0}8%{opacity:.9}100%{opacity:0}}
+.play .s2 .sfx{animation:sfxpop .5s 2.65s both}
+.play .s2 .bubble{animation:bpop .35s 3.3s both}
+.play .s2 .face-in{animation:fadein .1s 1.2s both}
+
+/* ---------- Szene 3: Trog ---------- */
+.play .s3 .head{animation:s3munch .32s 0s 7 alternate, s3up .3s 2.3s both;transform-origin:255px 160px}
+@keyframes s3munch{from{transform:rotate(22deg) translate(14px,22px)}to{transform:rotate(30deg) translate(14px,14px)}}
+@keyframes s3up{to{transform:rotate(-8deg) translate(0,-6px)}}
+.play .s3 .belly{animation:s3belly 2s both}
+@keyframes s3belly{0%{transform:scale(1)}100%{transform:scale(1.5)}}
+.play .s3 .slop{animation:s3slop .5s 0s 5 both}
+@keyframes s3slop{0%{opacity:0;transform:translate(0,0)}30%{opacity:1}100%{opacity:0;transform:translate(var(--dx),-70px)}}
+.play .s3 .burp{animation:s3burp 1.8s 2.5s ease-out both;transform-origin:280px 160px}
+@keyframes s3burp{0%{opacity:0;transform:scale(.1)}20%{opacity:1;transform:scale(1)}100%{opacity:0;transform:scale(1.6) translate(30px,-20px)}}
+.play .s3 .sfx{animation:sfxpop .6s 2.6s both}
+.play .s3 .bubble{animation:bpop .35s 3.4s both}
+
+/* ---------- Szene 4: Erdbeben ---------- */
+.play .s4 .lift{animation:s4lift .22s 1.65s ease-in both}
+@keyframes s4lift{from{transform:translateY(-34px)}to{transform:translateY(0)}}
+.play .s4 .wob{animation:s4wob .14s .2s 10 alternate;transform-origin:180px 252px}
+@keyframes s4wob{from{transform:rotate(-2.5deg)}to{transform:rotate(2.5deg)}}
+.play .s4 .pig{animation:s4sq .35s 1.8s both}
+@keyframes s4sq{0%{transform:scale(1,1)}40%{transform:scale(1.12,.84)}100%{transform:scale(1,1)}}
+.play .s4 .stool{animation:s4stool .3s 1.65s ease-in both;transform-origin:185px 254px}
+@keyframes s4stool{0%{transform:none}100%{transform:scaleY(.25) skewX(14deg)}}
+.play .s4 .world{animation:s4quake .09s 1.65s 14 alternate}
+@keyframes s4quake{from{transform:translate(-4px,3px)}to{transform:translate(4px,-3px)}}
+.play .s4 .crack{animation:s4crack .5s 1.7s ease-out both}
+@keyframes s4crack{from{stroke-dashoffset:300}to{stroke-dashoffset:0}}
+.play .s4 .dust{animation:s4dust 1.4s 1.7s ease-out both}
+@keyframes s4dust{0%{opacity:0;transform:scale(.3)}30%{opacity:1}100%{opacity:0;transform:scale(1.8)}}
+.play .s4 .sfx{animation:sfxpop .5s 1.7s both}
+.play .s4 .sign{animation:bpop .35s 2.8s both}
+
+/* ---------- Szene 5: Ballonschwein ---------- */
+.play .s5 .belly{animation:s5inflate 1.4s .2s ease-in-out both, s5deflate .8s 2.4s ease-in both}
+@keyframes s5inflate{0%{transform:scale(1)}100%{transform:scale(1.9)}}
+@keyframes s5deflate{0%{transform:scale(1.9)}100%{transform:scale(.8)}}
+.play .s5 .flyer{animation:s5fly 4.6s .2s linear both;transform-origin:180px 190px}
+@keyframes s5fly{
+ 0%{transform:translate(0,0) rotate(0)}
+ 30%{transform:translate(0,-25px) rotate(0)}
+ 40%{transform:translate(70px,-60px) rotate(40deg)}
+ 52%{transform:translate(-40px,-85px) rotate(-70deg)}
+ 64%{transform:translate(70px,-50px) rotate(180deg)}
+ 76%{transform:translate(-20px,-15px) rotate(320deg)}
+ 100%{transform:translate(0,0) rotate(360deg)}}
+.play .s5 .puff{animation:s5puff .9s var(--d) ease-out 1 both}
+@keyframes s5puff{0%{opacity:0;transform:scale(.2)}20%{opacity:.9}100%{opacity:0;transform:translate(var(--dx),var(--dy)) scale(2.2)}}
+.play .s5 .sfx{animation:sfxpop .5s 1.8s both}
+.play .s5 .sfx2{animation:sfxpop .5s 4.7s both}
+.play .s5 .bubble{animation:bpop .35s 3.9s both}
+
+/* ---------- gemeinsam ---------- */
+@keyframes sfxpop{0%{opacity:0;transform:scale(.2) rotate(-12deg)}30%{opacity:1;transform:scale(1.25) rotate(-6deg)}100%{opacity:1;transform:scale(1) rotate(-6deg)}}
+@keyframes bpop{0%{opacity:0;transform:scale(.6)}100%{opacity:1;transform:scale(1)}}
+@keyframes fadein{from{opacity:0}to{opacity:1}}
+@keyframes hideAt{to{opacity:0}}
+.bubble{opacity:0;transform-box:fill-box;transform-origin:50% 100%}
+.crack{opacity:0}
+.flash{opacity:0}
+.play .s2 .crack{opacity:1}
+.play .s4 .crack{opacity:1}
+.s4 .crack{stroke-dasharray:300}
+.fx-hidden{display:none}
+</style>
+</head>
+<body>
+<h1>xGem · Raumschiff-Alarm</h1>
+<div class="ui">5 Clips · je ca. 5 Sekunden · Pixel? Nein. Reines SVG/CSS, kein Videofile.</div>
+<div class="tabs" id="tabs"></div>
+<div class="stage">
+  <div class="hud"><span>TAGESLIMIT: <b>2.000 kcal</b></span><span>HEUTE: <b>3.847 kcal</b></span></div>
+  <div id="view"></div>
+  <div class="cap" id="cap"></div>
+</div>
+<div class="tabs"><button id="again">↻ Nochmal</button><button id="auto">▶ Alle nacheinander</button></div>
+
+<script>
+const INK='#1b1b1b',PINK='#ffb3c7',PINK2='#ff8fb0';
+const sk='class="sk"';
+
+function pig({pants=false,eyes='wide'}={}){
+return `
+<g class="pig">
+  <g class="tail"><path ${sk} d="M112 178 q-26 -6 -16 -24 q10 -10 18 2 q4 10 -8 12" fill="none"/></g>
+  <rect ${sk} x="132" y="222" width="28" height="32" rx="9" fill="${PINK2}"/>
+  <rect ${sk} x="206" y="222" width="28" height="32" rx="9" fill="${PINK2}"/>
+  <g class="belly">
+    <ellipse ${sk} cx="180" cy="190" rx="72" ry="56" fill="${PINK}"/>
+    <ellipse cx="150" cy="170" rx="20" ry="10" fill="#fff" opacity=".45" transform="rotate(-25 150 170)"/>
+    ${pants?`<path ${sk} d="M112 214 q68 34 136 0 l-6 -20 q-62 22 -124 0z" fill="#3b82f6"/><circle class="sk btn1" cx="236" cy="204" r="8" fill="${'#ffd21f'}"/>`:''}
+  </g>
+  <g class="head">
+    <path ${sk} d="M232 120 l8 -34 l24 22z" fill="${PINK2}"/>
+    <circle ${sk} cx="262" cy="150" r="42" fill="${PINK}"/>
+    <ellipse ${sk} cx="294" cy="162" rx="20" ry="15" fill="${PINK2}"/>
+    <ellipse cx="288" cy="162" rx="3.5" ry="6" fill="${INK}"/><ellipse cx="302" cy="162" rx="3.5" ry="6" fill="${INK}"/>
+    ${eyes==='closed'
+      ?`<path ${sk} d="M262 138 q10 -9 20 0" fill="none"/>`
+      :`<circle ${sk} cx="274" cy="138" r="11" fill="#fff"/><circle cx="277" cy="139" r="4.5" fill="${INK}"/>`}
+    <path ${sk} d="M270 184 q12 8 24 -2" fill="none"/>
+  </g>
+</g>`;
+}
+function bubble(x,y,w,txt,tailX=0){
+ const h=44;
+ return `<g class="bubble"><path ${sk} fill="#fff" d="M${x} ${y} h${w} a14 14 0 0 1 14 14 v${h-28} a14 14 0 0 1 -14 14 h-${w-(tailX||40)-20} l-14 18 l2 -18 h-${tailX||40} a14 14 0 0 1 -14 -14 v-${h-28} a14 14 0 0 1 14 -14z" transform="translate(0,0)"/>
+ <text class="t" x="${x+w/2}" y="${y+h/2+4}" text-anchor="middle" font-size="22">${txt}</text></g>`;
+}
+const sfx=(x,y,txt,size=54,cls='')=>`<text class="sfx ${cls}" x="${x}" y="${y}" text-anchor="middle" font-size="${size}">${txt}</text>`;
+const ground=`<rect x="-20" y="254" width="440" height="66" fill="#9ad66b"/><path ${sk} d="M-5 254 H405" fill="none"/>`;
+const sky=(c='#bfe6ff')=>`<rect x="-20" y="-20" width="440" height="340" fill="${c}"/>`;
+
+const signBox=(x,y,w,l1,l2)=>`<g class="sign"><rect ${sk} x="${x}" y="${y}" width="${w}" height="${l2?62:40}" fill="#fff"/><text class="t" x="${x+w/2}" y="${y+27}" text-anchor="middle" font-size="22">${l1}</text>${l2?`<text class="t" x="${x+w/2}" y="${y+53}" text-anchor="middle" font-size="22">${l2}</text>`:''}</g>`;
+const space=(c1='#0d1130')=>`<rect x="-20" y="-20" width="440" height="340" fill="${c1}"/>`+[...Array(30)].map((_,i)=>`<circle cx="${(i*83)%400}" cy="${(i*47)%230}" r="${i%4===0?2:1.2}" fill="#fff" opacity=".8"/>`).join('');
+const deck=`<rect x="-20" y="254" width="440" height="66" fill="#59627a"/><path ${sk} d="M-5 254 H405" fill="none"/>`;
+
+const scenes=[
+{ name:'1 · Transporter', cap:'„Scotty, ich glaub, ich bin zu schwer zum Beamen.“',
+  svg:()=>`<svg viewBox="0 0 400 300" class="t1">${space()}${deck}
+  <g class="pad"><ellipse ${sk} cx="180" cy="254" rx="105" ry="16" fill="#2b3350"/><ellipse cx="180" cy="252" rx="84" ry="9" fill="#7fe9ff" opacity=".7"/></g>
+  <path class="sk crack" fill="none" d="M120 254 l20 8 l-12 8 M240 254 l-16 8 l14 8"/>
+  <g class="shake"><g class="mat">${pig({eyes:'wide'})}</g></g>
+  <rect class="beam" x="90" y="40" width="180" height="214" fill="#7fe9ff"/>
+  ${[0,1,2,3,4,5].map(i=>`<circle class="spk" cx="${105+i*30}" cy="250" r="4" fill="#fff" style="--d:${(i*.18).toFixed(2)}s"/>`).join('')}
+  ${sfx(290,100,'BZZZT!',62)}
+  ${signBox(14,14,214,'WARNUNG: Masse','zu groß für Pad!')}
+  </svg>` },
+
+{ name:'2 · Warp-Absturz', cap:'Warpkern überlastet. Zu viel Ballast an Bord.',
+  svg:()=>`<svg viewBox="0 0 400 300" class="t2">${space('#0a0e2a')}
+  <g class="stars">${[30,60,90,120,150,180,210,240].map((y,i)=>`<rect class="st" x="0" y="${y}" width="${50+i%3*20}" height="3" fill="#fff" style="--d:${(i*.03).toFixed(2)}s"/>`).join('')}</g>
+  <rect x="-20" y="254" width="440" height="66" fill="#6b5b7a"/><path ${sk} d="M-5 254 H405" fill="none"/>
+  <g class="vib"><g class="ship">
+   <ellipse class="flame" cx="100" cy="176" rx="38" ry="10" fill="#ff9d2b"/>
+   <ellipse ${sk} cx="200" cy="176" rx="110" ry="26" fill="#aab4cc"/>
+   <ellipse ${sk} cx="200" cy="154" rx="52" ry="32" fill="#bfeaff"/>
+   <g class="pigdome"><circle ${sk} cx="200" cy="160" r="22" fill="${PINK}"/><ellipse ${sk} cx="214" cy="168" rx="11" ry="8" fill="${PINK2}"/><circle cx="208" cy="152" r="5" fill="#fff"/><circle cx="210" cy="153" r="2.4" fill="${INK}"/></g>
+   <path ${sk} d="M120 176 h160" fill="none" stroke-width="3"/>
+  </g></g>
+  ${[0,1,2].map(i=>`<circle class="smoke" ${sk} cx="${150+i*50}" cy="245" r="18" fill="#9aa0ad" style="--d:${(3.3+i*.15).toFixed(2)}s"/>`).join('')}
+  ${sfx(290,110,'PLONK.',62)}
+  ${signBox(14,14,238,'WARPKERN:','Zu viel Ballast!')}
+  </svg>` },
+
+{ name:'3 · Replikator', cap:'„Computer: Noch eine Pizza.“ – „Computer: Nein.“',
+  svg:()=>`<svg viewBox="0 0 400 300" class="t3">${space('#14183a')}${deck}
+  <g class="mach"><rect ${sk} x="4" y="126" width="68" height="128" fill="#4a5270"/><rect ${sk} x="14" y="178" width="48" height="30" fill="#7fe9ff"/><rect ${sk} x="14" y="138" width="48" height="20" fill="#222a45"/></g>
+  ${pig({eyes:'wide'})}
+  ${[.3,.9,1.4,1.8,2.1].map(d=>`<g class="plate" style="--d:${d}s;transform-origin:38px 195px"><circle ${sk} cx="38" cy="195" r="15" fill="#ffd21f"/><circle cx="32" cy="191" r="3.5" fill="#e5262b"/><circle cx="44" cy="198" r="3.5" fill="#e5262b"/><circle cx="36" cy="202" r="3" fill="#e5262b"/></g>`).join('')}
+  ${[0,1,2].map(i=>`<circle class="smoke" ${sk} cx="${30+i*14}" cy="120" r="12" fill="#9aa0ad" style="--d:${(3+i*.12).toFixed(2)}s"/>`).join('')}
+  ${sfx(280,95,'ABGELEHNT!',50)}
+  ${signBox(14,14,266,'REPLIKATOR: Anfrage','abgelehnt. Du hast genug.')}
+  </svg>` },
+
+{ name:'4 · Tricorder-Scan', cap:'Tricorder-Befund: Schwein. Ohne jeden Zweifel.',
+  svg:()=>`<svg viewBox="0 0 400 300" class="t4">${space('#101a2e')}${deck}
+  ${pig({eyes:'wide'})}
+  <g class="scanwrap"><rect class="scan" x="70" y="96" width="260" height="6" rx="3" fill="#7fe9ff" opacity=".85"/></g>
+  <g class="dev"><rect ${sk} x="324" y="196" width="58" height="56" rx="8" fill="#6b738f"/><rect ${sk} x="332" y="204" width="42" height="22" fill="#7cff9e"/><circle cx="341" cy="240" r="4" fill="#e5262b"/><circle cx="357" cy="240" r="4" fill="#ffd21f"/></g>
+  <rect ${sk} x="14" y="14" width="214" height="86" fill="#0b1d2b"/>
+  <text class="t l1" x="26" y="40" font-size="19" style="fill:#7cff9e">ANALYSE LÄUFT…</text>
+  <text class="t l2" x="26" y="64" font-size="19" style="fill:#7cff9e">LEBENSFORM: SCHWEIN</text>
+  <text class="t l3" x="26" y="88" font-size="19" style="fill:#ff6b6b">FETT: JA. VIEL.</text>
+  ${sfx(300,90,'BEEP BEEP!',50)}
+  </svg>` },
+
+{ name:'5 · Holodeck-Joggen', cap:'Holodeck-Joggen: Dauer 12 Sekunden. Dann Zusammenbruch.',
+  svg:()=>`<svg viewBox="0 0 400 300" class="t5"><rect x="-20" y="-20" width="440" height="340" fill="#0a0f1f"/>
+  <g class="grid" stroke="#ffb02e" stroke-width="2" opacity="1">${[0,1,2,3,4,5,6,7].map(i=>`<path d="M-20 ${254+i*9} H420"/>`).join('')}${[...Array(14)].map((_,i)=>`<path d="M${i*32-30} 254 L${200+(i-6.5)*90} 330"/>`).join('')}${[0,1,2,3,4].map(i=>`<path d="M-20 ${40+i*40} H420" opacity=".25"/>`).join('')}</g>
+  <path ${sk} d="M-5 254 H405" fill="none"/>
+  <g class="run">${pig({eyes:'wide'})}</g>
+  ${[0,1,2].map(i=>`<path class="sw" ${sk} d="M${250+i*18} ${110-i*6} q-6 10 0 14 q6 -4 0 -14z" fill="#8fd8ff" style="--d:${(i*.25).toFixed(2)}s;--dx:${20+i*14}px"/>`).join('')}
+  <rect class="gl" x="0" y="90" width="400" height="10" fill="#00e5ff"/><rect class="gl" x="0" y="170" width="400" height="14" fill="#ff2bd6"/><rect class="gl" x="0" y="215" width="400" height="8" fill="#00e5ff"/>
+  ${sfx(290,100,'ZZZT!',64)}
+  ${signBox(14,14,214,'HOLODECK-FEHLER:','Schwein überfordert')}
+  </svg>` }
+];
+
+let cur=0,timer=null,auto=false;
+const view=document.getElementById('view'),cap=document.getElementById('cap'),tabs=document.getElementById('tabs');
+scenes.forEach((s,i)=>{const b=document.createElement('button');b.textContent=s.name;b.onclick=()=>{auto=false;play(i)};tabs.appendChild(b)});
+function play(i){
+  clearTimeout(timer);cur=i;
+  [...tabs.children].forEach((b,j)=>b.classList.toggle('on',j===i));
+  view.className='';view.innerHTML=scenes[i].svg();cap.textContent=scenes[i].cap;
+  void view.offsetWidth;view.className='play';
+  timer=setTimeout(()=>{ if(auto) play((cur+1)%scenes.length) },5600);
+}
+document.getElementById('again').onclick=()=>play(cur);
+document.getElementById('auto').onclick=()=>{auto=true;play(0)};
+play(0);
+</script>
+</body>
+</html>
